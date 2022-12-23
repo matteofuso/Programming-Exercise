@@ -11,5 +11,5 @@
 *.vs/
 *Properties/
 *obj/
-key
-key.pub
+rsa
+rsa.pub
