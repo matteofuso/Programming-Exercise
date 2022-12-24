@@ -1,5 +1,3 @@
-# Remove key from files
-# Generated with ssh-keygen -t rsa -b 4096
 # Include only .cs and .exe file
 
 *.pdb
@@ -11,6 +9,5 @@
 *.vs/
 *Properties/
 *obj/
-rsa
-rsa.pub
-rsa-cert.pub
+*.vscode/
+*.vscode/*
