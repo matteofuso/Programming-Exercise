@@ -9,5 +9,4 @@
 *.vs/
 *Properties/
 *obj/
-*.vscode/
-*.vscode/*
+**/.vscode/
