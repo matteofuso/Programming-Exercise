@@ -12,7 +12,7 @@ namespace dadiMultiplayer
             string zero, unoPrima, unoCentro, unoDopo, due, giocatoreUno = "", giocatoreDue = "", winner;
             int centerX, centerY, sleep, num, faccia, scoreUno = 0, scoreDue = 0, vinteUno = 0, vinteDue = 0;
             ConsoleColor dado, pallini;
-            char pallino, continua;
+            char pallino;
             // Personalizzazione del dado
             dado = ConsoleColor.White;
             pallini = ConsoleColor.Black;
@@ -63,7 +63,7 @@ namespace dadiMultiplayer
                 Console.WriteLine(zero);
                 faccia = 1;
                 num = casual.Next(1, 7);
-                for (int i = 0; i < 13; i++)
+                for (int i = 0; i < 14; i++)
                 {
                     if (i == 7)
                     {
@@ -173,9 +173,27 @@ namespace dadiMultiplayer
                 do
                 {
                     Console.Write("Vuoi ripetere il ciclo? (S/N) ");
-                    continua = Convert.ToChar(Console.ReadLine());
-                } while (Char.ToUpper(continua) != 'S' && Char.ToUpper(continua) != 'N');
-            } while (Char.ToUpper(continua) == 'S');
+                    winner = Console.ReadLine();
+                } while (winner != "S" && winner != "N" && winner != "");
+            } while (winner == "S" || winner == "");
+            // Stampa i vincitori finali
+            if (vinteUno == vinteDue)
+            {
+                Console.WriteLine("Nessuno ha vinto la partita!");
+            }
+            else
+            {
+                if (vinteUno > vinteDue)
+                {
+                    winner = giocatoreUno;
+                }
+                else
+                {
+                    winner = giocatoreDue;
+                    scoreUno = scoreDue;
+                }
+                Console.Write("{0} ha vinto il la partita con {1} punti! Premi invio per uscire...", winner, scoreUno);
+            }
             Console.ReadLine();
         }
     }
