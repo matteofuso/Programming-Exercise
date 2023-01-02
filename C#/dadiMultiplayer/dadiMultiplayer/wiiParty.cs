@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 using System.Threading;
 
 namespace dadiMultiplayer
@@ -16,7 +17,7 @@ namespace dadiMultiplayer
             // Personalizzazione del dado
             dado = ConsoleColor.White;
             pallini = ConsoleColor.Black;
-            sleep = 700; // ms
+            sleep = 100; // ms
             pallino = 'O';
             zero = "                   ";
             unoPrima = "    " + pallino + "              ";
@@ -30,13 +31,20 @@ namespace dadiMultiplayer
                 Console.Clear();
                 // Stampo i nomi dei giocatori
                 Console.WriteLine("Nome del giocatore numero uno:");
-                if (scoreUno == 0 && scoreDue == 0)
+                if (giocatoreUno == "")
                 {
-                    giocatoreUno = Console.ReadLine();
+                    do
+                    {
+                        Console.CursorTop = 1;
+                        giocatoreUno = Console.ReadLine();
+                    } while (giocatoreUno == "");
                     Console.SetCursorPosition(Console.WindowWidth / 2, 0);
                     Console.Write("Nome del giocatore numero due:");
-                    Console.SetCursorPosition(Console.WindowWidth / 2, 1);
-                    giocatoreDue = Console.ReadLine();
+                    do
+                    {
+                        Console.SetCursorPosition(Console.WindowWidth / 2, 1);
+                        giocatoreDue = Console.ReadLine();
+                    } while (giocatoreDue == "");
                 }
                 else
                 {
