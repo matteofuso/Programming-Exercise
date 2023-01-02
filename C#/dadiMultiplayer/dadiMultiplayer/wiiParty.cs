@@ -30,7 +30,7 @@ namespace dadiMultiplayer
                 Console.Clear();
                 // Stampo i nomi dei giocatori
                 Console.WriteLine("Nome del giocatore numero uno:");
-                if (giocatoreUno == "")
+                if (scoreUno == 0 && scoreDue == 0)
                 {
                     giocatoreUno = Console.ReadLine();
                     Console.SetCursorPosition(Console.WindowWidth / 2, 0);
@@ -190,9 +190,9 @@ namespace dadiMultiplayer
                 else
                 {
                     winner = giocatoreDue;
-                    scoreUno = scoreDue;
+                    vinteUno = vinteDue;
                 }
-                Console.Write("{0} ha vinto il la partita con {1} punti! Premi invio per uscire...", winner, scoreUno);
+                Console.Write("{0} ha vinto il la partita con {1} punti! Premi invio per uscire...", winner, vinteUno);
             }
             Console.ReadLine();
         }
