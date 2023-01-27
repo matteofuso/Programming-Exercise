@@ -54,8 +54,8 @@ namespace Converter
                 peso++;
             }
             Console.WriteLine("Il numero {0:000} convertito in binario è {1:00000000} - Metodo Matematico", numero, finale);
-            // Metodo ChatGPT
-            Console.WriteLine("Il numero {0:000} convertito in binario è {1:00000000} - Metodo ChatGPT", numero, Convert.ToInt32(Convert.ToString(numero, 2)));
+            // Metodo Convert
+            // Console.WriteLine("Il numero {0:000} convertito in binario è {1:00000000} - Metodo ChatGPT", numero, Convert.ToInt32(Convert.ToString(numero, 2)));
             Console.WriteLine("Conversione riuscita. Preme invio per uscire...");
             Console.ReadLine();
         }
