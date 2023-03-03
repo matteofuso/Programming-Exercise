@@ -7,6 +7,7 @@ namespace Sort
     {
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
             int[] template = new int[10] { 1, 96, 365, 45, 3, -96, -78, 35, 45, 0 };
             int[] toSort = new int[template.Length];
             int options = 2, input, temp;
@@ -37,7 +38,7 @@ namespace Sort
                     switch (input)
                     {
                         case 1:
-                            Stopwatch stopwatch = new Stopwatch();
+                            stopwatch.Reset();
                             stopwatch.Start();
                             for (int condizioni = toSort.Length - 1; condizioni > 0; condizioni--)
                             {
@@ -62,7 +63,7 @@ namespace Sort
                     }
                     Console.ReadLine();
                 }
-            } while (options != 2);
+            } while (input != 2);
         }
     }
 }
