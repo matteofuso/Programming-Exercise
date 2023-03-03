@@ -7,7 +7,6 @@ namespace Sort
     {
         static void Main(string[] args)
         {
-            long start, end;
             int[] template = new int[10] { 1, 96, 365, 45, 3, -96, -78, 35, 45, 0 };
             int[] toSort = new int[template.Length];
             int options = 2, input, temp;
@@ -38,7 +37,8 @@ namespace Sort
                     switch (input)
                     {
                         case 1:
-                            start = Stopwatch.GetTimestamp();
+                            Stopwatch stopwatch = new Stopwatch();
+                            stopwatch.Start();
                             for (int condizioni = toSort.Length - 1; condizioni > 0; condizioni--)
                             {
                                 for (int i = 0; i < condizioni; i++)
@@ -51,13 +51,13 @@ namespace Sort
                                     }
                                 }
                             }
-                            end = Stopwatch.GetTimestamp();
+                            stopwatch.Stop();
                             Console.WriteLine("L'array ordinato è:");
                             for (int i = 0; i < toSort.Length; i++)
                             {
                                 Console.WriteLine(toSort[i]);
                             }
-                            Console.WriteLine("\n\rL'esecuzione ha impiegato {0} ticks.", end - start);
+                            Console.WriteLine("\n\rL'esecuzione ha impiegato {0} ticks. La tua macchina ne esegue {1} ogni ms.", stopwatch.ElapsedTicks, TimeSpan.TicksPerMillisecond);
                             break;
                     }
                     Console.ReadLine();
