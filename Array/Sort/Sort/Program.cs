@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Sort
@@ -8,7 +9,8 @@ namespace Sort
         static void Main(string[] args)
         {
             Stopwatch stopwatch = new Stopwatch();
-            int[] template = new int[10] { 1, 96, 365, 45, 3, -96, -78, 35, 45, 0 };
+            Random random = new Random();
+            int[] template = new int[10];
             int[] toSort = new int[template.Length];
             int options = 2, input, temp;
             string arr = "[ " + template[0] + ", ";
@@ -58,7 +60,7 @@ namespace Sort
                             {
                                 Console.WriteLine(toSort[i]);
                             }
-                            Console.WriteLine("\n\rL'esecuzione ha impiegato {0} ticks. La tua macchina ne esegue {1} ogni ms.", stopwatch.ElapsedTicks, TimeSpan.TicksPerMillisecond);
+                            Console.WriteLine("\n\rL'esecuzione ha impiegato {0} ticks. La tua macchina ne esegue {1} ogni ms.\n\rIl tempo di esecuzione è di {2} µs", stopwatch.ElapsedTicks, TimeSpan.TicksPerMillisecond, (double)stopwatch.ElapsedTicks * 1000 / TimeSpan.TicksPerMillisecond);
                             break;
                     }
                     Console.ReadLine();
