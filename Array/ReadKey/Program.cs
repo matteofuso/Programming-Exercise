@@ -7,25 +7,37 @@ namespace ReadKey
         static void Main(string[] args)
         {
             ConsoleKeyInfo tasto;
+            ConsoleColor color = ConsoleColor.Gray;
             char matita = '.';
-            bool continua = true, write = true;
-            int backLeft = 0, backTop = 0;
+            bool continua = true, write = false, ins = false;
+            int backLeft = 0, backTop = 0, i;
             do
             {
-                if (write)
+                if (write && !ins)
                 {
                     Console.Write(matita);
+                }
+                if (write && ins)
+                {
+                    Console.CursorLeft++;
                 }
                 backLeft = Console.CursorLeft;
                 backTop = Console.CursorTop;
                 Console.SetCursorPosition(0, Console.WindowHeight - 1);
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(new string(' ', Console.WindowWidth) + "\r");
-                Console.Write($" x: {backLeft} y: {backTop}");
+                for (i=0; i < Console.WindowWidth - 1; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write($"\r x: {backLeft} y: {backTop}");
+                if (ins)
+                {
+                    Console.Write(" INS");
+                }
                 Console.SetCursorPosition(backLeft, backTop);
                 Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = color;
                 write = false;
                 tasto = Console.ReadKey(true);
                 switch (tasto.Key)
@@ -38,7 +50,7 @@ namespace ReadKey
                         }
                         break;
                     case (ConsoleKey.RightArrow):
-                        if (Console.CursorLeft < Console.WindowWidth - 1)
+                        if (Console.CursorLeft < Console.WindowWidth)
                         {
                             write = true;
                         }
@@ -47,7 +59,10 @@ namespace ReadKey
                         if (Console.CursorTop < Console.WindowHeight - 2)
                         {
                             Console.CursorTop++;
-                            Console.CursorLeft--;
+                            if (Console.CursorLeft > 0)
+                            {
+                                Console.CursorLeft--;
+                            }
                             write = true;
                         }
                         break;
@@ -58,6 +73,30 @@ namespace ReadKey
                             Console.CursorLeft--;
                             write = true;
                         }
+                        break;
+                    case (ConsoleKey.C):
+                        Console.Clear();
+                        break;
+                    case (ConsoleKey.R):
+                        color = ConsoleColor.Red;
+                        break;
+                    case (ConsoleKey.G):
+                        color = ConsoleColor.Green;
+                        break;
+                    case (ConsoleKey.B):
+                        color = ConsoleColor.Blue;
+                        break;
+                    case (ConsoleKey.Y):
+                        color = ConsoleColor.Yellow;
+                        break;
+                    case (ConsoleKey.W):
+                        color = ConsoleColor.White;
+                        break;
+                    case (ConsoleKey.E):
+                        color = ConsoleColor.Black;
+                        break;
+                    case (ConsoleKey.Insert):
+                        ins = !ins;
                         break;
                     case (ConsoleKey.Escape):
                         continua = false;
