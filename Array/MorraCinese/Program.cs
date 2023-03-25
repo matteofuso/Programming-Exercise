@@ -4,21 +4,46 @@ namespace MorraCinese
 {
     class Program
     {
+        enum Mossa
+        {
+            Nessuna,
+            Sasso,
+            Carta,
+            Forbice
+        }
+        enum Vincitore
+        {
+            Pareggio,
+            Uno,
+            Due
+        }
+        struct Game
+        {
+            public Mossa mossaUno, mossaDue;
+            public Vincitore vincitore;
+        }
+        struct Giocatore
+        {
+            public string nome;
+            public int punteggio;
+        }
         static void Main(string[] args)
         {
             // Dichiarazione e inizializzazione variabili
-            string giocatoreUno, giocatoreDue, combo;
-            int i, vinciteUno = 0, vinciteDue = 0;
-            bool esci = false;
-            byte winner = 0;
+            const int partiteMassime = 10;
+            int i, giocate = 0;
+            Game[] partite = new Game[partiteMassime];
+            Giocatore giocatoreUno, giocatoreDue;
+            ConsoleKey key;
+            giocatoreUno.punteggio = giocatoreDue.punteggio = 0;
             // Chiedo i nomi dei giocatori
             Console.Write("Nome giocatore uno:");
             Console.CursorLeft = Console.WindowWidth / 2;
             Console.WriteLine("Nome giocatore due:");
-            giocatoreUno = Console.ReadLine();
+            giocatoreUno.nome = Console.ReadLine();
             Console.CursorLeft = Console.WindowWidth / 2;
             Console.CursorTop--;
-            giocatoreDue = Console.ReadLine();
+            giocatoreDue.nome = Console.ReadLine();
             Console.WriteLine();
             // Stampo le informazioni di base come la legenda e i punteggi
             Console.WriteLine("Legenda mosse:");
@@ -35,148 +60,141 @@ namespace MorraCinese
             Console.CursorLeft = Console.WindowWidth / 2;
             Console.WriteLine("Punteggio:");
             Console.WriteLine();
-            Console.WriteLine("Inserite le mosse e poi premete invio");
             do
             {
                 // Stampo i punteggi attuali e cancello la riga scritta precedentemente
                 Console.SetCursorPosition(11, 7);
-                Console.Write(vinciteUno);
+                Console.Write(giocatoreUno.punteggio);
                 Console.SetCursorPosition(Console.WindowWidth / 2 + 11, 7);
-                Console.Write(vinciteDue);
-                Console.SetCursorPosition(0, 10);
+                Console.Write(giocatoreDue.punteggio);
+                Console.SetCursorPosition(0, 9);
+                // Cancello la riga
                 for (i = 0; i < Console.WindowWidth; i++)
                 {
                     Console.Write(" ");
                 }
-                // Riposiziono il cursore e cambio calore per nascondere le mosse
-                Console.CursorTop--;
-                Console.ForegroundColor = ConsoleColor.Black;
-                combo = Console.ReadLine().ToLower();
-                // Riposiziono il cursore dove verranno scritti i messaggi e resetto il colore
-                Console.SetCursorPosition(0, 10);
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.CursorLeft = 0;
-                // Controllo se sono state inserite due mosse
-                if (combo.Length == 2)
+                Console.Write("\r");
+                // Mossa G1
+                Console.Write("{0} inserisci la mossa: ", giocatoreUno.nome);
+                do
                 {
-                    // Controllo se le mosse del giocatore uno sono valide
-                    if (combo[0] == 'a' || combo[0] == 's' || combo[0] == 'd')
+                    key = Console.ReadKey(true).Key;
+                    switch (key)
                     {
-                        // Controllo se le mosse del giocatore due sono valide
-                        if (combo[1] == 'j' || combo[1] == 'k' || combo[1] == 'l')
-                        {
-                            // Controllo la carta inserita dal primo utente e la confronto con la seconda
-                            switch (combo[0])
-                            {
-                                case 'a':
-                                    // Carta
-                                    switch (combo[1])
-                                    {
-                                        case 'j':
-                                            // Carta
-                                            winner = 2;
-                                            break;
-                                        case 'k':
-                                            // Sasso
-                                            winner = 0;
-                                            break;
-                                        case 'l':
-                                            // Forbici
-                                            winner = 1;
-                                            break;
-                                    }
-                                    break;
-                                case 's':
-                                    // Sasso
-                                    switch (combo[1])
-                                    {
-                                        case 'j':
-                                            // Carta
-                                            winner = 1;
-                                            break;
-                                        case 'k':
-                                            // Sasso
-                                            winner = 2;
-                                            break;
-                                        case 'l':
-                                            // Forbici
-                                            winner = 0;
-                                            break;
-                                    }
-                                    break;
-                                case 'd':
-                                    // Forbici
-                                    switch (combo[1])
-                                    {
-                                        case 'j':
-                                            // Carta
-                                            winner = 0;
-                                            break;
-                                        case 'k':
-                                            // Sasso
-                                            winner = 1;
-                                            break;
-                                        case 'l':
-                                            // Forbici
-                                            winner = 2;
-                                            break;
-                                    }
-                                    break;
-                            }
-                            // Controllo il vincitore e stampo il messaggio
-                            switch (winner)
-                            {
-                                case 0:
-                                    Console.Write("{0} ha vinto la battaglia ma non la sfida! ", giocatoreUno);
-                                    vinciteUno++;
-                                    break;
-                                case 1:
-                                    Console.Write("{0} ha vinto la battaglia ma non la sfida! ", giocatoreDue);
-                                    vinciteDue++;
-                                    break;
-                                case 2:
-                                    Console.Write("Avete pareggiato. ");
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            Console.Write("Mossa giocatore due non valida. ");
-                        }
+                        case ConsoleKey.A:
+                            partite[giocate].mossaUno = Mossa.Carta;
+                            break;
+                        case ConsoleKey.S:
+                            partite[giocate].mossaUno = Mossa.Sasso;
+                            break;
+                        case ConsoleKey.D:
+                            partite[giocate].mossaUno = Mossa.Forbice;
+                            break;
                     }
-                    else
-                    {
-                        Console.Write("Mossa giocatore uno non valida. ");
-                    }
-                }
-                // Controllo se si vuole uscire
-                else if (combo == "x")
+                } while (partite[giocate].mossaUno == Mossa.Nessuna && key != ConsoleKey.X);
+                // Esco se G1 preme x
+                if (key == ConsoleKey.X)
                 {
-                    esci = true;
+                    break;
                 }
-                // L'input non è valido
+                // Cancello la riga
+                Console.Write("\r");
+                for (i = 0; i < Console.WindowWidth; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write("\r");
+                // Mossa G2
+                Console.Write("{0} inserisci la mossa: ", giocatoreDue.nome);
+                do
+                {
+                    key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.J:
+                            partite[giocate].mossaDue = Mossa.Carta;
+                            break;
+                        case ConsoleKey.K:
+                            partite[giocate].mossaDue = Mossa.Sasso;
+                            break;
+                        case ConsoleKey.L:
+                            partite[giocate].mossaDue = Mossa.Forbice;
+                            break;
+                    }
+                } while (partite[giocate].mossaDue == Mossa.Nessuna);
+                // Cancello la riga
+                Console.Write("\r");
+                for (i = 0; i < Console.WindowWidth; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write("\r");
+                // Se ha vinto G1
+                if (
+                    (partite[giocate].mossaUno == Mossa.Carta && partite[giocate].mossaDue == Mossa.Sasso) ||
+                    (partite[giocate].mossaUno == Mossa.Sasso && partite[giocate].mossaDue == Mossa.Forbice) ||
+                    (partite[giocate].mossaUno == Mossa.Forbice && partite[giocate].mossaDue == Mossa.Carta)
+                )
+                {
+                    Console.Write("{0} ha vinto la battaglia ma non la sfida! ", giocatoreUno.nome);
+                    giocatoreUno.punteggio++;
+                    partite[giocate].vincitore = Vincitore.Uno;
+                }
+                // Se ha vinto G2
+                else if (
+                    (partite[giocate].mossaDue == Mossa.Carta && partite[giocate].mossaUno == Mossa.Sasso) ||
+                    (partite[giocate].mossaDue == Mossa.Sasso && partite[giocate].mossaUno == Mossa.Forbice) ||
+                    (partite[giocate].mossaDue == Mossa.Forbice && partite[giocate].mossaUno == Mossa.Carta)
+                )
+                {
+                    Console.Write("{0} ha vinto la battaglia ma non la sfida! ", giocatoreDue.nome);
+                    giocatoreDue.punteggio++;
+                    partite[giocate].vincitore = Vincitore.Due;
+                }
+                // Se hanno pareggiato
                 else
                 {
-                    Console.Write("Devi inserire due mosse. ");
+                    Console.Write("Avete pareggiato. ");
                 }
+                giocate++;
                 // Chiedo di premere invio perchè all'inizio cancello il messaggio precedente
-                Console.Write("Premi invio per continuare . . .");
-                Console.ReadLine();
-            } while (!esci);
-            Console.WriteLine();
-            // Scrivo il vincitore della partita
-            if (vinciteUno > vinciteDue)
+                Console.Write("Premi un tasto per continuare . . .");
+                Console.ReadKey();
+            } while (giocate != partiteMassime);
+            Console.WriteLine("\r\n");
+            // Stampo le varie partite
+            Console.WriteLine("Ecco le partite: ");
+            for (i = 0; i < giocate; i++)
             {
-                Console.WriteLine("{0} ha vinto la battaglia!", giocatoreUno);
+                Console.Write("Nella {0} paritta {1} ha giocato {2} e {3} ha giocato {4}. ", i + 1, giocatoreUno.nome, partite[i].mossaUno, giocatoreDue.nome, partite[i].mossaDue);
+                switch (partite[i].vincitore)
+                {
+                    case Vincitore.Uno:
+                        Console.WriteLine("Ha vinto {0}", giocatoreUno.nome);
+                        break;
+                    case Vincitore.Due:
+                        Console.WriteLine("Ha vinto {0}", giocatoreDue.nome);
+                        break;
+                    default:
+                        Console.WriteLine("Avete pareggiato");
+                        break;
+                }
             }
-            else if (vinciteDue > vinciteUno)
+            // Scrivo il vincitore della partita
+            Console.WriteLine();
+            if (giocatoreUno.punteggio > giocatoreDue.punteggio)
             {
-                Console.WriteLine("{0} ha vinto la battaglia!", giocatoreDue);
+                Console.WriteLine("{0} ha vinto la battaglia!", giocatoreUno.nome);
+            }
+            else if (giocatoreDue.punteggio > giocatoreUno.punteggio)
+            {
+                Console.WriteLine("{0} ha vinto la battaglia!", giocatoreDue.nome);
             }
             else
             {
                 Console.WriteLine("La battaglia è risultata in un pareggio.");
             }
+            Console.Write("Premere invio per uscire . . .");
             Console.ReadLine();
         }
     }

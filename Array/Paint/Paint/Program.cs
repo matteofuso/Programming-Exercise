@@ -17,6 +17,7 @@ namespace Paint
             ConsoleColor testo = ConsoleColor.White;
             Posizione last = new Posizione();
             ConsoleKey key;
+            Console.Write(matita);
             do
             {
                 last.x = Console.CursorLeft;
@@ -45,6 +46,7 @@ namespace Paint
                 {
                     // Direzione
                     case (ConsoleKey.LeftArrow):
+                    case (ConsoleKey.A):
                         // Freccia sinistra
                         if (Console.CursorLeft > 1)
                         {
@@ -52,6 +54,7 @@ namespace Paint
                         }
                         break;
                     case (ConsoleKey.RightArrow):
+                    case (ConsoleKey.D):
                         // Freccia destra
                         if (Console.CursorLeft < Console.WindowWidth - 1)
                         {
@@ -59,6 +62,7 @@ namespace Paint
                         }
                         break;
                     case (ConsoleKey.UpArrow):
+                    case (ConsoleKey.W):
                         // Freccia alta
                         if (Console.CursorTop > 0)
                         {
@@ -66,6 +70,7 @@ namespace Paint
                         }
                         break;
                     case (ConsoleKey.DownArrow):
+                    case (ConsoleKey.S):
                         // Freccia bassa
                         if (Console.CursorTop < Console.WindowHeight - 2)
                         {
@@ -73,21 +78,21 @@ namespace Paint
                         }
                         break;
                     // Colore
-                    case (ConsoleKey.W):
-                        // Bianco
-                        testo = ConsoleColor.White;
-                        continue;
-                    case (ConsoleKey.R):
+                    case (ConsoleKey.F1):
                         // Bianco
                         testo = ConsoleColor.Red;
                         continue;
-                    case (ConsoleKey.G):
+                    case (ConsoleKey.F2):
                         // Bianco
                         testo = ConsoleColor.Green;
                         continue;
-                    case (ConsoleKey.B):
+                    case (ConsoleKey.F3):
                         // Bianco
                         testo = ConsoleColor.Blue;
+                        continue;
+                    case (ConsoleKey.F4):
+                        // Bianco
+                        testo = ConsoleColor.White;
                         continue;
                     // Funzione
                     case (ConsoleKey.Escape):
@@ -111,6 +116,7 @@ namespace Paint
                     case (ConsoleKey.Backspace):
                         // Cancella tutto
                         Console.Clear();
+                        Console.Write(matita);
                         continue;
                     default:
                         // Tasto non implementato
