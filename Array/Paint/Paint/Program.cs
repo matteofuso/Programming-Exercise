@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Policy;
 
 namespace Paint
 {
@@ -22,32 +21,25 @@ namespace Paint
             public ConsoleColor backgrond, foreground;
             public char pennello;
         }
-        struct Swap
-        {
-            public char carattere;
-            public ConsoleColor color;
-            public Coordinate cordinate;
-        }
         static void Main(string[] args)
         {
-            ConsoleColor background = ConsoleColor.Black, foreground = ConsoleColor.White;
-            Pixel[,] schermo = new Pixel[Console.WindowHeight - 1, Console.WindowWidth - 1];
             Screenshot screenshot;
-            Swap swap;
             screenshot.schermo = new Pixel[Console.WindowHeight - 1, Console.WindowWidth - 1];
-            screenshot.posizione.X = 0;
-            screenshot.posizione.Y = 0;
+            Pixel[,] schermo = new Pixel[Console.WindowHeight - 1, Console.WindowWidth - 1];
+            ConsoleColor background = ConsoleColor.Black, foreground = ConsoleColor.White;
             screenshot.backgrond = background;
             screenshot.foreground = foreground;
-            screenshot.pennello = '.';
-            Coordinate posizione;
-            ConsoleKey tasto;
-            bool esci = false;
             bool ins = false, canc = false;
+            screenshot.posizione.X = 0;
+            screenshot.posizione.Y = 0;
+            screenshot.pennello = '\0';
+            Coordinate posizione;
             char pennello = '.';
-            int i, j;
+            bool esci = false;
+            ConsoleKey tasto;
             posizione.X = 0;
             posizione.Y = 0;
+            int i, j;
             do
             {
                 // Cambio il colore di sfondo per scrivere la riga delle informazioni
@@ -132,6 +124,7 @@ namespace Paint
                         continue;
                     // Tasto per salvare lo schermo
                     case ConsoleKey.F1:
+                        // Per salvare lo schermo salvo la matrice dello schermo nella matrice screenshot
                         for (i = 0; i < schermo.GetLength(0); i++)
                         {
                             for (j = 0; j < schermo.GetLength(1); j++)
@@ -141,6 +134,7 @@ namespace Paint
                                 screenshot.schermo[i, j].foreground = schermo[i, j].foreground;
                             }
                         }
+                        // Salvo infine le proprietà
                         screenshot.posizione = posizione;
                         screenshot.foreground = foreground;
                         screenshot.backgrond = background;
@@ -148,59 +142,49 @@ namespace Paint
                         continue;
                     // Tasto Undo
                     case ConsoleKey.F2:
-                        for (i = 0; i < schermo.GetLength(0); i++)
+                        // Controllo se c'è uno screenshot
+                        if (screenshot.pennello != '\0')
                         {
-                            for (j = 0; j < schermo.GetLength(1); j++)
+                            // Per tornare indietro modifico i pixel diversi
+                            for (i = 0; i < schermo.GetLength(0); i++)
                             {
-                                if ((screenshot.schermo[i, j].pennello != schermo[i, j].pennello) ||
-                                    (screenshot.schermo[i, j].background != schermo[i, j].background) ||
-                                    (screenshot.schermo[i, j].foreground != schermo[i, j].foreground)
-                                )
+                                for (j = 0; j < schermo.GetLength(1); j++)
                                 {
-                                    Console.SetCursorPosition(j, i);
-                                    if (screenshot.schermo[i, j].pennello == '\0')
+                                    // Controllo le differenze tra i pixel e modifico solo quelli che sono cambiati
+                                    if ((screenshot.schermo[i, j].pennello != schermo[i, j].pennello) ||
+                                        (screenshot.schermo[i, j].background != schermo[i, j].background) ||
+                                        (screenshot.schermo[i, j].foreground != schermo[i, j].foreground)
+                                    )
                                     {
-                                        Console.BackgroundColor = ConsoleColor.Black;
-                                        Console.Write("  ");
-                                    }
-                                    else
-                                    {
-                                        Console.BackgroundColor = screenshot.schermo[i, j].background;
-                                        Console.ForegroundColor = screenshot.schermo[i, j].foreground;
-                                        Console.Write(screenshot.schermo[i, j].pennello);
+                                        Console.SetCursorPosition(j, i);
+                                        if (screenshot.schermo[i, j].pennello == '\0')
+                                        {
+                                            Console.BackgroundColor = ConsoleColor.Black;
+                                            Console.Write("  ");
+                                        }
+                                        else
+                                        {
+                                            Console.BackgroundColor = screenshot.schermo[i, j].background;
+                                            Console.ForegroundColor = screenshot.schermo[i, j].foreground;
+                                            Console.Write(screenshot.schermo[i, j].pennello);
+                                        }
                                     }
                                 }
                             }
+                            // Ripristino le proprietà
+                            posizione = screenshot.posizione;
+                            foreground = screenshot.foreground;
+                            background = screenshot.backgrond;
+                            pennello = screenshot.pennello;
                         }
-                        // Set delle proprietà dello schermo con swap
-                        for (i = 0; i < schermo.GetLength(0); i++)
+                        else
                         {
-                            for (j = 0; j < schermo.GetLength(1); j++)
-                            {
-                                swap.carattere = screenshot.schermo[i, j].pennello;
-                                screenshot.schermo[i, j].pennello = schermo[i, j].pennello;
-                                schermo[i, j].pennello = swap.carattere;
-
-                                swap.color = screenshot.schermo[i, j].background;
-                                screenshot.schermo[i, j].background = schermo[i, j].background;
-                                schermo[i, j].background = swap.color;
-
-                                swap.color = screenshot.schermo[i, j].foreground;
-                                screenshot.schermo[i, j].foreground = schermo[i, j].foreground;
-                                schermo[i, j].foreground = swap.color;
-                            }
+                            Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight - 1);
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.Write("Non hai neancora fatto uno screenshot!");
+                            Console.ReadKey();
                         }
-                        swap.cordinate = screenshot.posizione;
-                        screenshot.posizione = posizione;
-                        posizione = swap.cordinate;
-
-                        swap.color = screenshot.foreground;
-                        screenshot.foreground = foreground;
-                        foreground = swap.color;
-
-                        swap.color = screenshot.backgrond;
-                        screenshot.backgrond = background;
-                        background = swap.color;
                         continue;
                     // Tasto per cambiare matita
                     case ConsoleKey.F3:
@@ -260,7 +244,7 @@ namespace Paint
                     default:
                         continue;
                 }
-                // Se c'è stata qualche modifica riposiziono il cursore e procedo 
+                // Controllo se mi muovo in verticale e nel caso x-- così da non andare in diagonale
                 if (Console.CursorTop != posizione.Y)
                 {
                     if (Console.CursorLeft > 0)
@@ -268,40 +252,41 @@ namespace Paint
                         Console.CursorLeft--;
                     }
                 }
+                // Se ins è inserito vado avanti di uno
                 if (ins)
                 {
                     Console.CursorLeft++;
-                    continue;
                 }
+                // Se canc è inserito scrivo uno spazio di colore nero
                 else if (canc)
                 {
+                    schermo[Console.CursorTop, Console.CursorLeft].pennello = '\0';
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.Write(' ');
-                    schermo[posizione.Y, posizione.X - 1].pennello = '\0';
                 }
+                // Se nessuno è inserito scrivo pennello con background e foreground
                 else
                 {
+                    // Salvo i dati del pixel nella matrice
+                    schermo[Console.CursorTop, Console.CursorLeft].background = background;
+                    schermo[Console.CursorTop, Console.CursorLeft].foreground = foreground;
+                    schermo[Console.CursorTop, Console.CursorLeft].pennello = pennello;
                     Console.Write(pennello);
                     posizione.Y = Console.CursorTop;
+                    // Se ci si sposta dal primo pixel, coloro anche quello
                     if (posizione.X == 0)
                     {
                         posizione.X = Console.CursorLeft;
+                        schermo[0, 0].pennello = pennello;
                         Console.SetCursorPosition(0, 0);
                         Console.Write(pennello);
+                        continue;
                     }
-                    else
-                    {
-                        posizione.X = Console.CursorLeft;
-                    }
-                    schermo[posizione.Y, posizione.X - 1].pennello = pennello;
-                }
-                if (ins || canc)
-                {
-                    posizione.Y = Console.CursorTop;
                     posizione.X = Console.CursorLeft;
+                    continue;
                 }
-                schermo[posizione.Y, posizione.X - 1].background = background;
-                schermo[posizione.Y, posizione.X - 1].foreground = foreground;
+                posizione.Y = Console.CursorTop;
+                posizione.X = Console.CursorLeft;
             } while (!esci);
         }
     }
