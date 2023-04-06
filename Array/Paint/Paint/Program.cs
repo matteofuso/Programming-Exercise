@@ -168,6 +168,9 @@ namespace Paint
                                             Console.ForegroundColor = screenshot.schermo[i, j].foreground;
                                             Console.Write(screenshot.schermo[i, j].pennello);
                                         }
+                                        schermo[i, j].background = screenshot.schermo[i, j].background;
+                                        schermo[i, j].foreground = screenshot.schermo[i, j].foreground;
+                                        schermo[i, j].pennello = screenshot.schermo[i, j].pennello;
                                     }
                                 }
                             }
