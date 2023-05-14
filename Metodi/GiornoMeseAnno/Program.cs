@@ -11,12 +11,12 @@ namespace GiornoMeseAnno
             IntSepara(out intData, out giorno, out mese, out anno);
             Console.WriteLine();
             Console.WriteLine("Con numero");
-            Console.WriteLine("{0:00} {1} {2:0000}", giorno, NumeroAMese(mese), anno);
+            Console.WriteLine("{0} {1:00} {2} {3:0000}", Zeller(giorno, mese, anno), giorno, NumeroAMese(mese), anno);
             Console.WriteLine();
 
             StringSepara(Convert.ToString(intData), out giorno, out mese, out anno);
             Console.WriteLine("Con stringa");
-            Console.WriteLine("{0:00} {1} {2:0000}", giorno, NumeroAMese(mese), anno);
+            Console.WriteLine("{0} {1:00} {2} {3:0000}", Zeller(giorno, mese, anno), giorno, NumeroAMese(mese), anno);
 
             Console.WriteLine();
             Console.WriteLine("Premi un tasto per uscire . . .");
@@ -26,6 +26,20 @@ namespace GiornoMeseAnno
         {
             string[] mesi = { "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre" };
             return mesi[mese - 1];
+        }
+        static string Zeller(int giorno, int mese, int annoCompleto)
+        {
+            // https://en.wikipedia.org/wiki/Zeller%27s_congruence
+            string[] giorni = { "Sabato", "Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì" };
+            int anno = annoCompleto % 100;
+            int secolo = annoCompleto / 100;
+            if (mese < 3)
+            {
+                mese += 12;
+                anno--;
+            }
+            int h = (giorno + ((13 * (mese + 1)) / 5) + anno + (anno / 4) + (secolo / 4) - (2 * secolo)) % 7;
+            return giorni[h];
         }
         static bool DateCorrect(int giorno, int mese, int anno, ref string messaggio)
         {
