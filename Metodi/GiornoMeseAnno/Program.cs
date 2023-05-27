@@ -4,23 +4,68 @@ namespace GiornoMeseAnno
 {
     class Program
     {
+        struct Posizione
+        {
+            public int x;
+            public int y;
+            public ConsoleColor Background;
+            public ConsoleColor Foreground;
+        }
         static void Main(string[] args)
         {
             int intData, giorno, mese, anno;
-
+            Scrittura("Inserisci la data (ddmmaaaa):", 3, 2, ConsoleColor.Black, ConsoleColor.White, false);
             IntSepara(out intData, out giorno, out mese, out anno);
-            Console.WriteLine();
-            Console.WriteLine("Con numero");
-            Console.WriteLine("{0} {1:00} {2} {3:0000}", Zeller(giorno, mese, anno), giorno, NumeroAMese(mese), anno);
-            Console.WriteLine();
-
-            StringSepara(Convert.ToString(intData), out giorno, out mese, out anno);
-            Console.WriteLine("Con stringa");
-            Console.WriteLine("{0} {1:00} {2} {3:0000}", Zeller(giorno, mese, anno), giorno, NumeroAMese(mese), anno);
-
-            Console.WriteLine();
-            Console.WriteLine("Premi un tasto per uscire . . .");
+            Scrittura("Con numero", 3, 4, ConsoleColor.Black, ConsoleColor.White, false);
+            Scrittura($"{Zeller(giorno, mese, anno)} {giorno} {NumeroAMese(mese)} {anno}", 3, 5, ConsoleColor.Black, ConsoleColor.White, false);
+            Scrittura("Premi un tasto per uscire . . .", 3, 7, ConsoleColor.Black, ConsoleColor.White, false);
             Console.ReadKey();
+        }
+        static Posizione PreparaCursore(int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
+        {
+            Posizione posizione = new Posizione();
+            posizione.x = Console.CursorLeft;
+            posizione.y = Console.CursorTop;
+            posizione.Background = Console.BackgroundColor;
+            posizione.Foreground = Console.ForegroundColor;
+            Console.SetCursorPosition(x, y);
+            Console.BackgroundColor = coloreSfondo;
+            Console.ForegroundColor = coloreTesto;
+            return posizione;
+        }
+        static void RiposizionaCursore(Posizione posizione, bool riposiziona)
+        {
+            if (riposiziona)
+            {
+                Console.SetCursorPosition(posizione.x, posizione.y);
+            }
+            Console.BackgroundColor = posizione.Background;
+            Console.ForegroundColor = posizione.Foreground;
+        }
+        static void Scrittura(string stringa, int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto, bool riposiziona)
+        {
+            Posizione posizione = PreparaCursore(x, y, coloreSfondo, coloreTesto);
+            Console.Write(stringa);
+            RiposizionaCursore(posizione, riposiziona);
+        }
+        static string Lettura(int dimensione, int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
+        {
+            string buffer = "";
+            ConsoleKeyInfo key;
+            Posizione posizione = PreparaCursore(x, y, coloreSfondo, coloreTesto);
+            for (int i = 0; i < dimensione; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.CursorLeft -= dimensione;
+            do
+            {
+                key = Console.ReadKey();
+                buffer += key.KeyChar;
+            } while (buffer.Length != dimensione && key.Key != ConsoleKey.Enter);
+            RiposizionaCursore(posizione, false);
+            Console.WriteLine();
+            return buffer;
         }
         static string NumeroAMese(int mese)
         {
@@ -41,17 +86,20 @@ namespace GiornoMeseAnno
             int h = (giorno + ((13 * (mese + 1)) / 5) + anno + (anno / 4) + (secolo / 4) - (2 * secolo)) % 7;
             return giorni[h];
         }
-        static bool DateCorrect(int giorno, int mese, int anno, ref string messaggio)
+        static bool Bisestile(int anno)
+        {
+            return (anno % 100 == 0 && anno % 400 == 0) || (anno % 100 != 0 && anno % 4 == 0);
+        }
+        static bool DateCorrect(int giorno, int mese, int anno)
         {
             int max;
             if (mese < 1 || mese > 12)
             {
-                messaggio = "Mese non valido. ";
                 return false;
             }
             if (mese == 2)
             {
-                if (anno % 4 == 0) // Bisestile
+                if (Bisestile(anno))
                 {
                     max = 29;
                 }
@@ -70,27 +118,21 @@ namespace GiornoMeseAnno
             }
             if (giorno > max)
             {
-                messaggio = NumeroAMese(mese) + " ha solo " + max + " giorni. ";
                 return false;
             }
             return true;
         }
         static void IntSepara(out int intData, out int giorno, out int mese, out int anno)
         {
-            string messaggio = "";
             do
             {
-                Console.Write("{0}Inserisci la data (ddmmaaaa): ", messaggio);
-                while (!int.TryParse(Console.ReadLine(), out giorno) || giorno < 1000000 || giorno > 100000000)
-                {
-                    Console.Write("Inserisci un numero valido: ");
-                }
+                while (!int.TryParse(Lettura(8, 33, 2, ConsoleColor.White, ConsoleColor.Black), out giorno) || giorno < 1000000 || giorno > 100000000) { }
                 intData = giorno;
                 anno = giorno % 10000;
                 giorno /= 10000;
                 mese = giorno % 100;
                 giorno /= 100;
-            } while (!DateCorrect(giorno, mese, anno, ref messaggio));
+            } while (!DateCorrect(giorno, mese, anno));
         }
         static void StringSepara(string data, out int giorno, out int mese, out int anno)
         {
