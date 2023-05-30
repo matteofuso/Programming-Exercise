@@ -4,78 +4,70 @@ namespace GiornoMeseAnno
 {
     class Program
     {
-        struct Posizione
+        enum Mesi
         {
-            public int x;
-            public int y;
+            Gennaio,
+            Febbraio,
+            Marzo,
+            Aprile,
+            Maggio,
+            Giugno,
+            Luglio,
+            Agosto,
+            Settembre,
+            Ottobre,
+            Novembre,
+            Dicembre
+        }
+        enum Giorni
+        {
+            Sabato,
+            Domenica,
+            Lunedì,
+            Martedì,
+            Mercoledì,
+            Giovedì,
+            Venerdì,
+        }
+        struct Cursore
+        {
             public ConsoleColor Background;
             public ConsoleColor Foreground;
         }
         static void Main(string[] args)
         {
-            int intData, giorno, mese, anno;
-            Scrittura("Inserisci la data (ddmmaaaa):", 3, 2, ConsoleColor.Black, ConsoleColor.White, false);
-            IntSepara(out intData, out giorno, out mese, out anno);
-            Scrittura("Con numero", 3, 4, ConsoleColor.Black, ConsoleColor.White, false);
-            Scrittura($"{Zeller(giorno, mese, anno)} {giorno} {NumeroAMese(mese)} {anno}", 3, 5, ConsoleColor.Black, ConsoleColor.White, false);
-            Scrittura("Premi un tasto per uscire . . .", 3, 7, ConsoleColor.Black, ConsoleColor.White, false);
-            Console.ReadKey();
-        }
-        static Posizione PreparaCursore(int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
-        {
-            Posizione posizione = new Posizione();
-            posizione.x = Console.CursorLeft;
-            posizione.y = Console.CursorTop;
-            posizione.Background = Console.BackgroundColor;
-            posizione.Foreground = Console.ForegroundColor;
-            Console.SetCursorPosition(x, y);
-            Console.BackgroundColor = coloreSfondo;
-            Console.ForegroundColor = coloreTesto;
-            return posizione;
-        }
-        static void RiposizionaCursore(Posizione posizione, bool riposiziona)
-        {
-            if (riposiziona)
-            {
-                Console.SetCursorPosition(posizione.x, posizione.y);
-            }
-            Console.BackgroundColor = posizione.Background;
-            Console.ForegroundColor = posizione.Foreground;
-        }
-        static void Scrittura(string stringa, int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto, bool riposiziona)
-        {
-            Posizione posizione = PreparaCursore(x, y, coloreSfondo, coloreTesto);
-            Console.Write(stringa);
-            RiposizionaCursore(posizione, riposiziona);
-        }
-        static string Lettura(int dimensione, int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
-        {
-            string buffer = "";
-            ConsoleKeyInfo key;
-            Posizione posizione = PreparaCursore(x, y, coloreSfondo, coloreTesto);
-            for (int i = 0; i < dimensione; i++)
-            {
-                Console.Write(" ");
-            }
-            Console.CursorLeft -= dimensione;
+            string data;
+            int giorno, mese, anno;
+            Scrittura("Inserisci la data (ddmmaaaa):", 1, 1, ConsoleColor.Black, ConsoleColor.White); //3 2
             do
             {
-                key = Console.ReadKey();
-                buffer += key.KeyChar;
-            } while (buffer.Length != dimensione && key.Key != ConsoleKey.Enter);
-            RiposizionaCursore(posizione, false);
-            Console.WriteLine();
-            return buffer;
+                data = Lettura(8, 31, 1, ConsoleColor.White, ConsoleColor.Black);
+            } while (!IntSepara(data, out giorno, out mese, out anno));
+            Scrittura($"{NumeroAGiorno(giorno, mese, anno)} {giorno} {NumeroAMese(mese)} {anno}", 1, 3, ConsoleColor.Black, ConsoleColor.White);
+            Scrittura("Premi un tasto per uscire . . .", 1, 5, ConsoleColor.Black, ConsoleColor.White);
+            Console.ReadKey();
+        }
+        static bool IntSepara(string data, out int giorno, out int mese, out int anno)
+        {
+            if (int.TryParse(data, out giorno))
+            {
+                anno = giorno % 10000;
+                giorno /= 10000;
+                mese = giorno % 100;
+                giorno /= 100;
+                return DataOK(giorno, mese, anno);
+            }
+            mese = 0;
+            anno = 0;
+            return false;
         }
         static string NumeroAMese(int mese)
         {
-            string[] mesi = { "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre" };
-            return mesi[mese - 1];
+            return Convert.ToString((Mesi)(mese - 1));
         }
-        static string Zeller(int giorno, int mese, int annoCompleto)
+        static string NumeroAGiorno(int giorno, int mese, int annoCompleto)
         {
             // https://en.wikipedia.org/wiki/Zeller%27s_congruence
-            string[] giorni = { "Sabato", "Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì" };
             int anno = annoCompleto % 100;
             int secolo = annoCompleto / 100;
             if (mese < 3)
@@ -84,13 +76,13 @@ namespace GiornoMeseAnno
                 anno--;
             }
             int h = (giorno + ((13 * (mese + 1)) / 5) + anno + (anno / 4) + (secolo / 4) - (2 * secolo)) % 7;
-            return giorni[h];
+            return Convert.ToString((Giorni)h);
         }
         static bool Bisestile(int anno)
         {
             return (anno % 100 == 0 && anno % 400 == 0) || (anno % 100 != 0 && anno % 4 == 0);
         }
-        static bool DateCorrect(int giorno, int mese, int anno)
+        static bool DataOK(int giorno, int mese, int anno)
         {
             int max;
             if (mese < 1 || mese > 12)
@@ -122,27 +114,56 @@ namespace GiornoMeseAnno
             }
             return true;
         }
-        static void IntSepara(out int intData, out int giorno, out int mese, out int anno)
+        static Cursore PreparaCursore(int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
         {
+            Cursore posizione = new Cursore();
+            posizione.Background = Console.BackgroundColor;
+            posizione.Foreground = Console.ForegroundColor;
+            Console.SetCursorPosition(x, y);
+            Console.BackgroundColor = coloreSfondo;
+            Console.ForegroundColor = coloreTesto;
+            return posizione;
+        }
+        static void ResettaCursore(Cursore posizione)
+        {
+            Console.BackgroundColor = posizione.Background;
+            Console.ForegroundColor = posizione.Foreground;
+        }
+        static void Scrittura(string stringa, int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
+        {
+            Cursore cursore = PreparaCursore(x, y, coloreSfondo, coloreTesto);
+            Console.Write(stringa);
+            ResettaCursore(cursore);
+        }
+        static string Lettura(int dimensione, int x, int y, ConsoleColor coloreSfondo, ConsoleColor coloreTesto)
+        {
+            string buffer = "";
+            char key;
+            Cursore posizione = PreparaCursore(x, y, coloreSfondo, coloreTesto);
+            for (int i = 0; i < dimensione; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.CursorLeft -= dimensione;
             do
             {
-                while (!int.TryParse(Lettura(8, 33, 2, ConsoleColor.White, ConsoleColor.Black), out giorno) || giorno < 1000000 || giorno > 100000000) { }
-                intData = giorno;
-                anno = giorno % 10000;
-                giorno /= 10000;
-                mese = giorno % 100;
-                giorno /= 100;
-            } while (!DateCorrect(giorno, mese, anno));
-        }
-        static void StringSepara(string data, out int giorno, out int mese, out int anno)
-        {
-            if (data.Length == 7)
-            {
-                data = " " + data;
-            }
-            giorno = Convert.ToInt32(data.Substring(0, 2));
-            mese = Convert.ToInt32(data.Substring(2, 2));
-            anno = Convert.ToInt32(data.Substring(4));
+                key = Console.ReadKey(true).KeyChar;
+                if (!char.IsControl(key))
+                {
+                    Console.Write(key);
+                    buffer += key;
+                }
+                else if (key == '\b' && buffer.Length != 0)
+                {
+                    buffer = buffer.Remove(buffer.Length - 1);
+                    Console.CursorLeft--;
+                    Console.Write(' ');
+                    Console.CursorLeft--;
+                }
+            } while (buffer.Length != dimensione && key != '\r');
+            ResettaCursore(posizione);
+            Console.WriteLine();
+            return buffer;
         }
     }
 }

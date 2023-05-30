@@ -10,18 +10,18 @@ namespace Fiammiferi
             bool turno = true, CPUOppnent, impossible = false; //False Giocatore1, True Giocatore2
             byte fiammiferi = 21, withdraw;
             const byte maxWithdraw = 3;
-            // Chiedo all'utente se vuole giocare con il computer, in modalità impossibile e infine i nomi dei giocatori
+            //Chiedo all'utente se vuole giocare con il computer, in modalità impossibile e infine i nomi dei giocatori
             CPUOppnent = YesNo("Vuoi giocare con il computer");
             if (CPUOppnent)
             {
-                impossible = YesNo("Vuoi che il PC vinca sempre");
+                impossible = YesNo("Vuoi giocare in difficoltà estrema");
             }
             // Per vincere sempre, il computer deve iniziare per primo
             if (impossible)
             {
                 turno = !turno;
             }
-            RichiediNomi(giocatori, CPUOppnent);
+            ChiediNomi(giocatori, CPUOppnent);
             Console.WriteLine();
             // Inizio di ogni turno
             do
@@ -38,12 +38,7 @@ namespace Fiammiferi
                 else
                 {
                     // Chiedo il numero di fiammiferi al giocatore finchè i dati non sono accettabili
-                    Console.WriteLine("Turno di {0}, sono rimasti {1} fiammiferi e ne puoi prendere fino a {2}.", PlayerName(turno, giocatori), fiammiferi, maxWithdraw);
-                    Console.Write("Inserisci i fiammiferi da prendere: ");
-                    while (!byte.TryParse(Console.ReadLine(), out withdraw) || PrelevaOK(withdraw, fiammiferi, maxWithdraw))
-                    {
-                        Console.Write("Inserisci un numero corretto di fiammiferi: ");
-                    }
+                    withdraw = PlayerMove(turno, giocatori, fiammiferi, maxWithdraw);
                 }
                 // Rimuovo i fiammiferi
                 fiammiferi -= withdraw;
@@ -64,7 +59,43 @@ namespace Fiammiferi
             //     Numero minimo        Chiedi più fiammiferi di quelli che ci sono                      Chiedo troppi fiammiferi
             return withdraw < 1 || (fiammiferi <= maxWithdraw && withdraw > fiammiferi) || (fiammiferi > maxWithdraw && withdraw > maxWithdraw);
         }
-        static private void RichiediNomi(string[] giocatori, bool CPUOppnent)
+        static private void StampaTavolo(byte fiammiferi)
+        {
+            const int fiammifero = 7;
+            int x = 0;
+            // Preparo la zona dove andranno i fiammiferi per evitare lo scroll
+            for (int i = 0; i <= fiammifero; i++)
+            {
+                Console.WriteLine();
+            }
+            int y = Console.CursorTop - fiammifero;
+            // Stampo i fiammiferi
+            for (int j = 0; j < fiammiferi; j++)
+            {
+                x += 4;
+                // Spazio ogni 4
+                if (j % 4 == 0)
+                {
+                    x += 3;
+                }
+                Console.CursorTop = y;
+                // Stampo un fiammifero
+                for (int i = 0; i < 7; i++)
+                {
+                    Console.CursorLeft = x;
+                    if (i == 0)
+                    {
+                        Console.WriteLine('░');
+                    }
+                    else
+                    {
+                        Console.WriteLine('█');
+                    }
+                }
+            }
+            Console.WriteLine();
+        }
+        static private void ChiediNomi(string[] giocatori, bool CPUOppnent)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -105,6 +136,10 @@ namespace Fiammiferi
             {
                 // Bisogna portare il gioco ad una situazione dove c'è un multiplo di 4 sul tavolo
                 // Alla fine l'avversari si troverà con 4 fiammiferi, lasciandoci la vittoria
+                if (fiammiferi % 4 == 0)
+                {
+                    return 1;
+                }
                 return (byte)(fiammiferi % 4);
             }
             else
@@ -120,6 +155,19 @@ namespace Fiammiferi
                     return (byte)random.Next(1, 4);
                 }
             }
+        }
+        static private byte PlayerMove(bool turno, string[] giocatori, byte fiammiferi, byte maxWithdraw)
+        {
+            byte withdraw;
+            // Chiedo il numero di fiammiferi al giocatore finchè i dati non sono accettabili
+            Console.WriteLine("Turno di {0}. Questo è il tavolo:", PlayerName(turno, giocatori));
+            StampaTavolo(fiammiferi);
+            Console.Write("Inserisci il numero di fiammiferi da prendere: ");
+            while (!byte.TryParse(Console.ReadLine(), out withdraw) || PrelevaOK(withdraw, fiammiferi, maxWithdraw))
+            {
+                Console.Write("Inserisci un numero corretto di fiammiferi: ");
+            }
+            return withdraw;
         }
     }
 }
