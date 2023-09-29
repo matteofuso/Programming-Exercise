@@ -7,56 +7,77 @@ namespace Targa
         static void Main(string[] args)
         {
             string targa;
-            int n = 0;
+            int n;
+            // Chiedo la targa
             do
             {
                 Console.Write("Inserisci la targa: ");
                 targa = Console.ReadLine();
-            } while (ControlloTarga(targa));
-            targa = RiordinaTarga(targa).ToUpper();
-            Console.WriteLine("La targa ordinata è {0}", targa);
-            for (int i = 0; i < 4; i++)
-            {
-                n += ((int)targa[i] - 'A') * 1000 * (int)Math.Pow(26, 3 - i);
-            }
-            for (int i = 4; i < 7; i++)
-            {
-                n += ((int)targa[i] - '0') * (int)Math.Pow(10, 6 - i);
-            }
-            Console.WriteLine("La targa è la numero {0}", n);
+            } while (!TargaValida(targa));
+            // Converto
+            n = PlateToInt(targa);
+            // Stampo
+            Console.WriteLine("La targa {0} è la numero {1}", targa, n);
+            // Converto
+            targa = IntToPlate(n);
+            // Stampo
+            Console.WriteLine("La targa numero {0} è la targa {1}", n, targa);
+            // Esco
             Console.Write("Premi un tasto per uscire . . .");
             Console.ReadKey();
+        }
+        static int PlateToInt(string targa)
+        {
+            int n = 0;
+            targa = RiordinaTarga(targa).ToUpper();
+            for (int i = 0; i < 4; i++)
+            {
+                // Lettere
+                n += ((int)targa[i] - 'A') * (int)Math.Pow(26, 3 - i) * 1000;
+            }
+            // Numeri
+            n += Convert.ToInt32(targa.Substring(4));
+            return n;
+        }
+        static string IntToPlate(int n)
+        {
+            string targa = "";
+            int numeriCentrali = n % 1000;
+            n /= 1000;
+            for (int i = 0; i < 4; i++)
+            {
+                targa = (char)(n % 26 + 'A') + targa;
+                n /= 26;
+            }
+            targa = targa.Insert(2, Convert.ToString(numeriCentrali));
+            return targa;
         }
         static string RiordinaTarga(string targa)
         {
             return targa.Remove(2, 3) + targa.Substring(2, 3);
         }
-        static bool ControlloTarga(string targa)
+        static bool TargaValida(string targa)
         {
             if (targa.Length == 7)
             {
                 for (int i = 0; i < targa.Length; i++)
                 {
-                    // AA 000 AA
-                    // 01 234 56
+                    //01 234 56
                     if (i > 1 && i < 5)
                     {
                         if (!char.IsDigit(targa[i]))
                         {
-                            return true;
+                            return false;
                         }
                     }
-                    else
+                    else if (!char.IsLetter(targa[i]))
                     {
-                        if (!char.IsLetter(targa[i]))
-                        {
-                            return true;
-                        }
+                        return false;
                     }
                 }
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }
