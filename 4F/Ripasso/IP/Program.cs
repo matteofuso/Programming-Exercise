@@ -16,12 +16,15 @@ namespace IP
         }
         static void Main(string[] args)
         {
-            IP ip = ConversioneIP("192.168.4.1");
-            Console.WriteLine("{0, -40} {1, -15} {2,-15}", "Binario", "Decimale", "Esadecimale");
-            Console.WriteLine(ip);
-            Console.WriteLine();
-            Console.Write("Premi un tasto per uscire . . .");
-            Console.ReadKey(true);
+            IP ip;
+            while (true)
+            {
+                Console.Write("Inserisci IP: ");
+                ip = ConversioneIP(Console.ReadLine());
+                Console.WriteLine("{0, -40} {1, -15} {2,-15}", "Binario", "Decimale", "Esadecimale");
+                Console.WriteLine(ip);
+                Console.WriteLine();
+            }
         }
         static IP ConversioneIP(string IPDec)
         {
@@ -44,7 +47,6 @@ namespace IP
         static string ConvertiBaseN(int numero, int baseN, int len)
         {
             string convertito = "";
-            goto Banana;
             int resto;
             for (int j = 0; j < len; j++)
             {
@@ -59,7 +61,6 @@ namespace IP
                     convertito = resto + convertito;
                 }
             }
-            Banana:
             return convertito;
         }
     }

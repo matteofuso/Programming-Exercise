@@ -33,6 +33,7 @@ namespace Targa
             for (int i = 0; i < 4; i++)
             {
                 // Lettere
+                Console.WriteLine("{0} - {1} - {2} -> {3}", targa[i], (int)targa[i] - 'A', 3 - i, ((int)targa[i] - 'A') * (int)Math.Pow(26, 3 - i) * 1000);
                 n += ((int)targa[i] - 'A') * (int)Math.Pow(26, 3 - i) * 1000;
             }
             // Numeri
