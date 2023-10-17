@@ -1,5 +1,5 @@
-Ôªøusing System;
-using System.Linq.Expressions;
+using System;
+using System.IO;
 
 namespace Anagrafe
 {
@@ -42,15 +42,16 @@ namespace Anagrafe
         }
         static void Main(string[] args)
         {
-            string[] opzioni = { "Inserimento", "Visualizzazione", "Modifica", "Elimina", "Et√†" };
+            string path = Environment.CurrentDirectory + "\\leaf.log";
+            string[] opzioni = { "Inserimento", "Visualizzazione", "Modifica", "Eliminazione", "Calcolo et‡", "Stampa Log" };
             Anagrafica[] comune = {
-                new Anagrafica { nome = "Agostino", cognome = "Rizzi", dataNascita = new DateTime(1915,7,28), luogoNascita = "Castagnaro", cittadinanza = "Italiana", codiceFiscale = "RZZGTN15L28C041W", stato = Stato.Occupato},
+                new Anagrafica { nome = "Agostino", cognome = "Rizzi", dataNascita = new DateTime(1915,7,28), luogoNascita = "Castagnaro", cittadinanza = "Italiana", codiceFiscale = "RZZGTN15L28C041W", stato = Stato.Cancellato},
                 new Anagrafica { nome = "Maria", cognome = "Ferrari",dataNascita = new DateTime(1896,10,2) ,luogoNascita = "Brasile",sesso=Sesso.Femmina,statoCivile=StatoCivile.Coniugato, cittadinanza = "Brasiliana", codiceFiscale = "FRRMRA96R42Z602R", stato = Stato.Occupato},
-                new Anagrafica { nome = "Solidea", cognome = "Monco", dataNascita = new DateTime(1889,5,15),luogoNascita = "Villaova del Ghebbo", sesso=Sesso.Femmina,statoCivile=StatoCivile.Nubile, cittadinanza = "Italiana", codiceFiscale = "MNCCST89E55L985V", stato = Stato.Cancellato},
+                new Anagrafica { nome = "Solidea", cognome = "Monco", dataNascita = new DateTime(1889,5,15),luogoNascita = "Villaova del Ghebbo", sesso=Sesso.Femmina,statoCivile=StatoCivile.Nubile, cittadinanza = "Italiana", codiceFiscale = "MNCSLD89E55L985N", stato = Stato.Cancellato},
                 new Anagrafica { nome = "Atanasio", cognome = "Beghetto", dataNascita = new DateTime(1885,6,10), luogoNascita = "Lendinara", statoCivile = StatoCivile.Divorziato, cittadinanza = "Italiana", codiceFiscale = "BGHTNS85H10E522R", stato = Stato.Occupato},
                 new Anagrafica { nome = "Luigi", cognome = "Paiato", dataNascita = new DateTime(1921,5,14), luogoNascita = "Lendinara",statoCivile=StatoCivile.Coniugato, cittadinanza = "Italiana", codiceFiscale = "PTALGU21E14E522O", stato = Stato.Occupato}
             };
-            int scelta, indice = 0;
+            int scelta, indice;
             string input;
             do
             {
@@ -59,28 +60,44 @@ namespace Anagrafe
                 {
                     Console.WriteLine("{0} cittadini:", opzioni[scelta]);
                     Console.WriteLine();
-                    if (scelta == 0 && PrimoIndicePerStato(comune, true, false, true) == -1)
+                    indice = PrimoIndicePerStato(comune, true, false, true);
+                    if (scelta == 0)
                     {
-                        Console.WriteLine("Agenda piena");
-                        scelta = -1;
-                    }
-                    else if (scelta > 1)
-                    {
-                        do
-                        {
-                            Console.Write("Inserisci il codice fiscale: ");
-                            input = Console.ReadLine().ToUpper();
-                        } while (input.Length != 16);
-                        indice = CercaCF(comune, input);
                         if (indice == -1)
                         {
-                            Console.WriteLine("Persona non trovata");
+                            ScriviLog(path, "Tentativo di inserimento, agenda piena");
+                            Console.WriteLine("Agenda piena");
                             scelta = -1;
+                        }
+                    }
+                    else if (scelta != 5)
+                    {
+                        indice = PrimoIndicePerStato(comune, false, true, false);
+                        if (indice == -1)
+                        {
+                            ScriviLog(path, $"Tentativo di {opzioni[scelta].ToLower()}, agenda vuota");
+                            Console.WriteLine("Agenda vuota");
+                            scelta = -1;
+                        }
+                        else if (scelta > 1)
+                        {
+                            do
+                            {
+                                Console.Write("Inserisci il codice fiscale: ");
+                                input = Console.ReadLine().ToUpper();
+                            } while (input.Length != 16);
+                            indice = CercaCF(comune, input);
+                            if (indice == -1)
+                            {
+                                ScriviLog(path, $"Tentativo di {opzioni[scelta].ToLower()}, persona non trovata (CF: {input})");
+                                Console.WriteLine("Persona non trovata");
+                                scelta = -1;
+                            }
                         }
                     }
                     if (scelta != -1)
                     {
-                        IndirizzamentoMetodi(comune, scelta, indice);
+                        ScelteMenu(comune, scelta, indice, path);
                     }
                     Console.WriteLine();
                     Console.Write("Premi un tasto per continuare . . .");
@@ -88,14 +105,21 @@ namespace Anagrafe
                 }
             } while (scelta != opzioni.Length);
         }
-        static void IndirizzamentoMetodi(Anagrafica[] comune, int scelta, int indice)
+        static void ScelteMenu(Anagrafica[] comune, int scelta, int indice, string path)
         {
             switch (scelta)
             {
                 case 0:
-                    if (!Inserimento(comune))
+                    indice = Inserimento(comune);
+                    if (indice < 1)
                     {
-                        Console.WriteLine("Persona gi√† presente");
+                        Console.WriteLine("Persona gi‡ presente");
+                        ScriviLog(path, $"Tentativo di inserimento, persona gi‡ presente (CF: {comune[-indice].codiceFiscale})");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Persona inserita");
+                        ScriviLog(path, string.Format("{0,-20} {1}", "Inserimento persona:", comune[indice]));
                     }
                     break;
                 case 1:
@@ -104,52 +128,63 @@ namespace Anagrafe
                     if (scelta == 0)
                     {
                         Visualizza(comune, false, true, false);
+                        ScriviLog(path, "Visualizzazione di tutte le persone presenti");
                     }
                     else
                     {
                         Visualizza(comune, true, true, true);
+                        ScriviLog(path, "Visualizzazione di tutti gli elementi");
                     }
                     break;
                 case 2:
-                    Modifica(comune, indice);
+                    Console.WriteLine();
+                    scelta = Menu(new string[] { "Stato Civile" }, "Seleziona il campo da modificare", 0, Console.CursorTop, ConsoleColor.Gray, ConsoleColor.Black, false);
+                    Console.WriteLine();
+                    ScriviLog(path, string.Format("{0,20} {1}", "Modifica cittadino:", comune[indice]));
+                    switch (scelta)
+                    {
+                        case 0:
+                            Modifica(comune, indice, scelta, Menu(Enum.GetNames(typeof(StatoCivile)), "Seleziona lo stato civile", 0, Console.CursorTop, ConsoleColor.Gray, ConsoleColor.Black, false));
+                            break;
+                    }
+                    ScriviLog(path, string.Format("{0,20} {1}", "->", comune[indice]));
                     break;
                 case 3:
                     Elimina(comune, indice);
+                    ScriviLog(path, $"Eliminazione cittadio (CF: {comune[indice].codiceFiscale})");
                     break;
                 case 4:
-                    StampaEt√†(comune[indice], DateTime.Now);
+                    Console.WriteLine("Il cittadino {0} {1} ha {2} anni", comune[indice].nome, comune[indice].cognome, CalcoloEt‡(comune[indice].dataNascita, DateTime.Now));
+                    ScriviLog(path, $"Calcolo et‡ cittadino (CF: {comune[indice].codiceFiscale})");
+                    break;
+                case 5:
+                    LeggiLog(path);
+                    ScriviLog(path, "Stampo log");
                     break;
             }
         }
-        static void StampaEt√†(Anagrafica persona, DateTime data)
+        static int CalcoloEt‡(DateTime nascita, DateTime data)
         {
-            int et√†;
-            TimeSpan differenza = data - persona.dataNascita;
-            Console.WriteLine("{0} {1} ha {2} anni", persona.nome, persona.cognome, differenza.Days / 365);
-            et√† = data.Year - persona.dataNascita.Year;
-            if (persona.dataNascita.Month < data.Month && persona.dataNascita.Day < data.Day)
+            int et‡;
+            et‡ = data.Year - nascita.Year;
+            if (nascita.Month >= data.Month && (nascita.Month > data.Month || nascita.Day > data.Day))
             {
-                et√†--;
+                et‡--;
             }
-            Console.WriteLine("{0} {1} ha {2} anni", persona.nome, persona.cognome, et√†);
+            return et‡;
         }
         static void Elimina(Anagrafica[] comune, int indice)
         {
             comune[indice].stato = Stato.Cancellato;
         }
-        static void Modifica(Anagrafica[] comune, int indice)
+        static void Modifica(Anagrafica[] comune, int indice, int scelta, int valore)
         {
-            int scelta;
-            // Chiedo il campo da modificare
-            Console.WriteLine();
-            scelta = Menu(new string[] { "Stato Civile" }, "Seleziona il campo da modificare", 0, Console.CursorTop, ConsoleColor.Gray, ConsoleColor.Black, false);
-            Console.WriteLine();
             // Modifico
             switch (scelta)
             {
                 case 0:
                     // Modifico lo stato civile
-                    comune[indice].statoCivile = (StatoCivile)Menu(Enum.GetNames(typeof(StatoCivile)), "Seleziona lo stato civile", 0, Console.CursorTop, ConsoleColor.Gray, ConsoleColor.Black, false);
+                    comune[indice].statoCivile = (StatoCivile)valore;
                     break;
             }
         }
@@ -164,10 +199,10 @@ namespace Anagrafe
                 }
             }
         }
-        static bool Inserimento(Anagrafica[] comune)
+        static int Inserimento(Anagrafica[] comune)
         {
             string codiceCatastale;
-            int i = PrimoIndicePerStato(comune, true, false, true);
+            int i = PrimoIndicePerStato(comune, true, false, true), j;
             // Chiedo il nome
             do
             {
@@ -211,13 +246,14 @@ namespace Anagrafe
             comune[i].statoCivile = (StatoCivile)Menu(Enum.GetNames(typeof(StatoCivile)), "Seleziona lo stato civile", 0, Console.CursorTop, ConsoleColor.Gray, ConsoleColor.Black, false);
             // Calcolo il cofice fiscale
             comune[i].codiceFiscale = CalcolaCF(comune[i], codiceCatastale);
-            // Controllo se una persona con lo stesso CF √® presente
-            if (CercaCF(comune, comune[i].codiceFiscale) == -1)
+            // Controllo se una persona con lo stesso CF Ë presente
+            j = CercaCF(comune, comune[i].codiceFiscale);
+            if (j == -1)
             {
                 comune[i].stato = Stato.Occupato;
-                return true;
+                return i;
             }
-            return false;
+            return -j;
         }
         static int Menu(string[] opzioni, string intestazione, int x, int y, ConsoleColor coloreTesto, ConsoleColor coloreSfondo, bool opzioneUscita)
         {
@@ -226,7 +262,7 @@ namespace Anagrafe
             string temp = "";
             // Cambio sfondo e colore
             (Console.BackgroundColor, Console.ForegroundColor) = (coloreSfondo, coloreTesto);
-            // Cancello tutto se siamo sul men√π iniziale
+            // Cancello tutto se siamo sul men˘ iniziale
             if (opzioneUscita)
             {
                 Console.Clear();
@@ -242,7 +278,7 @@ namespace Anagrafe
                 Console.CursorLeft = x;
                 Console.WriteLine("{0}. {1}", i, opzioni[i - 1]);
             }
-            // Stampo l'opzione di uscita (Se nel men√π iniziale)
+            // Stampo l'opzione di uscita (Se nel men˘ iniziale)
             if (opzioneUscita)
             {
                 Console.CursorLeft = x;
@@ -271,7 +307,7 @@ namespace Anagrafe
             } while (scelta < 1 || scelta > maxValue);
             // Resetto il colore di testo e sfondo
             (Console.BackgroundColor, Console.ForegroundColor) = (ConsoleColor.Black, ConsoleColor.Gray);
-            // Cancello tutto se siamo sul men√π iniziale
+            // Cancello tutto se siamo sul men˘ iniziale
             if (opzioneUscita)
             {
                 Console.Clear();
@@ -386,6 +422,24 @@ namespace Anagrafe
                 }
             }
             return -1;
+        }
+        static void ScriviLog(string path, string testo)
+        {
+            StreamWriter sw = File.AppendText(path);
+            sw.WriteLine("{0} {1}", DateTime.Now, testo);
+            sw.Close();
+        }
+        static void LeggiLog(string path)
+        {
+            StreamReader sr = File.OpenText(path);
+            string linea;
+            linea = sr.ReadLine();
+            while (linea != null)
+            {
+                Console.WriteLine(linea);
+                linea = sr.ReadLine();
+            }
+            sr.Close();
         }
     }
 }
