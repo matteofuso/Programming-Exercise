@@ -31,16 +31,17 @@ namespace Anagrafe
         }
         static void Main(string[] args)
         {
-            List<Anagrafica> comune = new List<Anagrafica>();
+            //List<Anagrafica> comune = new List<Anagrafica>();
             string root = Path.Combine(Environment.CurrentDirectory, "data\\"), messaggio;
-            //List<Anagrafica> comune = new List<Anagrafica>() {
-            //    new Anagrafica { nome = "Agostino", cognome = "Rizzi", dataNascita = new DateTime(1915,7,28), luogoNascita = "Castagnaro", cittadinanza = "Italiana", codiceFiscale = "RZZGTN15L28C041W"},
-            //    new Anagrafica { nome = "Maria", cognome = "Ferrari",dataNascita = new DateTime(1896,10,2) ,luogoNascita = "Brasile",sesso=Sesso.Femmina,statoCivile=StatoCivile.Coniugato, cittadinanza = "Brasiliana", codiceFiscale = "FRRMRA96R42Z602R"},
-            //    new Anagrafica { nome = "Solidea", cognome = "Monco", dataNascita = new DateTime(1889,5,15),luogoNascita = "Villanova del Ghebbo", sesso=Sesso.Femmina,statoCivile=StatoCivile.Nubile, cittadinanza = "Italiana", codiceFiscale = "MNCSLD89E55L985N"},
-            //    new Anagrafica { nome = "Atanasio", cognome = "Beghetto", dataNascita = new DateTime(1885,6,10), luogoNascita = "Lendinara", statoCivile = StatoCivile.Divorziato, cittadinanza = "Italiana", codiceFiscale = "BGHTNS85H10E522R"},
-            //    new Anagrafica { nome = "Luigi", cognome = "Paiato", dataNascita = new DateTime(1921,5,14), luogoNascita = "Lendinara",statoCivile=StatoCivile.Coniugato, cittadinanza = "Italiana", codiceFiscale = "PTALGU21E14E522O"}
-            //};
-            string[] opzioni = { "Inserimento", "Visualizzazione", "Modifica", "Eliminazione", "Calcolo Età", "Stampa Log", "Elimina Log", "Esporta in CSV", "Importa da CSV" };
+            List<Anagrafica> comune = new List<Anagrafica>() {
+                new Anagrafica { nome = "Agostino", cognome = "Rizzi", dataNascita = new DateTime(1915,7,28), luogoNascita = "Castagnaro", cittadinanza = "Italiana", codiceFiscale = "RZZGTN15L28C041W"},
+                new Anagrafica { nome = "Maria", cognome = "Ferrari",dataNascita = new DateTime(1896,10,2) ,luogoNascita = "Brasile",sesso=Sesso.Femmina,statoCivile=StatoCivile.Coniugato, cittadinanza = "Brasiliana", codiceFiscale = "FRRMRA96R42Z602R"},
+                new Anagrafica { nome = "Michele", cognome = "Fuso",dataNascita = new DateTime(1823,1,1) ,luogoNascita = "Villanova del Ghebbo",sesso=Sesso.Maschio,statoCivile=StatoCivile.Coniugato, cittadinanza = "Italiana", codiceFiscale = "FSUMHL23A01L985T"},
+                new Anagrafica { nome = "Solidea", cognome = "Monco", dataNascita = new DateTime(1889,5,15),luogoNascita = "Villanova del Ghebbo", sesso=Sesso.Femmina,statoCivile=StatoCivile.Nubile, cittadinanza = "Italiana", codiceFiscale = "MNCSLD89E55L985N"},
+                new Anagrafica { nome = "Atanasio", cognome = "Beghetto", dataNascita = new DateTime(1885,6,10), luogoNascita = "Lendinara", statoCivile = StatoCivile.Divorziato, cittadinanza = "Italiana", codiceFiscale = "BGHTNS85H10E522R"},
+                new Anagrafica { nome = "Luigi", cognome = "Paiato", dataNascita = new DateTime(1921,5,14), luogoNascita = "Lendinara",statoCivile=StatoCivile.Coniugato, cittadinanza = "Italiana", codiceFiscale = "PTALGU21E14E522O"}
+            };
+            string[] opzioni = { "Inserimento", "Visualizzazione", "Modifica", "Eliminazione", "Calcolo Età", "Visualizza per prima lettera del CF", "Stampa Log", "Elimina Log", "Esporta in CSV", "Importa da CSV" };
             int scelta;
             do
             {
@@ -86,7 +87,9 @@ namespace Anagrafe
             {
                 cittadino.codiceFiscale = CalcolaCF(cittadino, cittadino.codiceFiscale.Substring(11, 4));
             }
-            comune[indice] = cittadino;
+            //comune[indice] = cittadino;
+            comune.RemoveAt(indice);
+            comune.Insert(indice, cittadino);
         }
         static void Visualizza(List<Anagrafica> comune)
         {
@@ -131,11 +134,11 @@ namespace Anagrafe
         }
         static void ScelteMenu(string operazione, List<Anagrafica> comune, int scelta, string root, out string messaggio)
         {
-            //{ "Inserimento", "Visualizzazione", "Modifica", "Eliminazione", "Calcolo Età", "Stapa Log", "Elimina Log", "Esporta in CSV", "Importa da CSV" }
-            //        0                1               2             3              4             5             6                 7                 8
+            //{ "Inserimento", "Visualizzazione", "Modifica", "Eliminazione", "Calcolo Età", "Visualizza per prima lettera del CF", "Stapa Log", "Elimina Log", "Esporta in CSV", "Importa da CSV" }
+            //        0                1               2             3              4                         5                           6             7                 8                 9
             int sceltaModifica, indiceInserimento, indice;
-            string percorso, messaggioConsole;
-            Controllo(comune, scelta, root, operazione, out indice, out messaggio, out messaggioConsole, out percorso);
+            string percorso, messaggioConsole, stringa;
+            Controllo(comune, scelta, root, operazione, out indice, out messaggio, out messaggioConsole, out percorso, out stringa);
             if (messaggio != "")
             {
                 Console.WriteLine(messaggioConsole);
@@ -197,19 +200,33 @@ namespace Anagrafe
                         messaggio = $"Calcolo età cittadino (CF: {comune[indice].codiceFiscale})";
                         break;
                     case 5:
+                        List<Anagrafica> sottoAnagrafica = comune.FindAll(p => p.codiceFiscale.StartsWith(stringa));
+                        if (sottoAnagrafica.Count == 0)
+                        {
+                            Console.WriteLine("Non ci sono codici fiscali inizianti per {0}", stringa);
+                            messaggio = $"Tentativo di {operazione}, non ci sono codici fiscali inizianti per {stringa}";
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            Visualizza(sottoAnagrafica);
+                            messaggio = $"Visualizzo tutte le persone con codice fiscale che inizia con {stringa}";
+                        }
+                        break;
+                    case 6:
                         LeggiLog(percorso);
                         messaggio = "Stampo log " + percorso;
                         break;
-                    case 6:
+                    case 7:
                         File.Delete(percorso);
                         messaggio = "Cancello log " + percorso;
                         break;
-                    case 7:
+                    case 8:
                         EsportaCSV(comune, root);
                         Console.WriteLine("Esportazione eseguita");
                         messaggio = "Esportazione comune";
                         break;
-                    case 8:
+                    case 9:
                         if (ImportaCSV(comune, root))
                         {
                             Console.WriteLine("File non esistente");
@@ -224,10 +241,12 @@ namespace Anagrafe
                 }
             }
         }
-        static void Controllo(List<Anagrafica> comune, int scelta, string root, string operazione, out int indice, out string messaggioLog, out string messaggioConsole, out string percorso)
+        static void Controllo(List<Anagrafica> comune, int scelta, string root, string operazione, out int indice, out string messaggioLog, out string messaggioConsole, out string percorso, out string stringa)
         {
+            //{ "Inserimento", "Visualizzazione", "Modifica", "Eliminazione", "Calcolo Età", "Visualizza per prima lettera del CF", "Stapa Log", "Elimina Log", "Esporta in CSV", "Importa da CSV" }
+            //        0                1               2             3              4                         5                           6             7                 8                 9
             string CF;
-            messaggioConsole = messaggioLog = percorso = "";
+            messaggioConsole = messaggioLog = percorso = stringa = "";
             string[] files;
             indice = 0;
             if (scelta != 0 && scelta < 7)
@@ -258,7 +277,20 @@ namespace Anagrafe
                         }
                     }
                 }
-                else if (scelta > 4 && scelta < 7)
+                else if (scelta == 5)
+                {
+                    do
+                    {
+                        Console.Write("Inserisci il carattere di inizio o \"Esci\": ");
+                        stringa = Console.ReadLine().ToUpper();
+                    } while (stringa.Length != 1 && stringa == "Esci");
+                    if (stringa == "Esci")
+                    {
+                        messaggioLog = $"Esco da {operazione}";
+                        messaggioConsole = "Esco dalla visualizzazione";
+                    }
+                }
+                else if (scelta > 5 && scelta < 7)
                 {
                     root = Path.Combine(root, "log\\");
                     if (!Directory.Exists(root))
@@ -342,7 +374,7 @@ namespace Anagrafe
             string CF;
             // Aggiungo il cognome
             VocaliConsonanti(persona.cognome, out vocali, out consonanti);
-            CF = (consonanti + vocali).PadRight(3, 'X');
+            CF = (consonanti + vocali).PadRight(3, 'X').Substring(0, 3);
             // Aggiungo il nome
             VocaliConsonanti(persona.nome, out vocali, out consonanti);
             if (consonanti.Length > 3)
@@ -351,7 +383,7 @@ namespace Anagrafe
             }
             else
             {
-                CF += (consonanti + vocali).PadRight(3, 'X');
+                CF += (consonanti + vocali).PadRight(3, 'X').Substring(0, 3);
             }
             // Aggiungo l'anno di nascita
             CF += persona.dataNascita.Year.ToString().PadLeft(4, '0').Substring(2);
@@ -416,7 +448,7 @@ namespace Anagrafe
                 {
                     foreach (char c in testo)
                     {
-                        if (!char.IsLetter(c))
+                        if (!char.IsLetter(c) && c != ' ')
                         {
                             testo = "";
                             break;

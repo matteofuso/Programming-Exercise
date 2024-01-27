@@ -1,0 +1,40 @@
+Identificativo,Specializzazione,Numero Letti Disponibili,Numeri Letti Occupati
+RO00,Pediatria,20,5
+Nome,Cognome,Temperatura
+Giovanna,Bianchi,"36,7"
+Pietro,Arturi,"37,5"
+Leopoldo,Armani,"38,7"
+Alfredo,Costa,"36,3"
+Eleonora,Padovani,"37,1"
+
+Identificativo,Specializzazione,Numero Letti Disponibili,Numeri Letti Occupati
+RO01,Ginecologia,15,4
+Nome,Cognome,Temperatura
+Isabella,Russo,36
+Chiara,Marchesi,37
+Francesca,Conti,"36,5"
+Martina,Costa,"36,3"
+
+Identificativo,Specializzazione,Numero Letti Disponibili,Numeri Letti Occupati
+RO02,Pronto_Soccorso,15,10
+Nome,Cognome,Temperatura
+Alessio,Moretti,"37,2"
+Valentina,Rossi,"36,8"
+Matteo,Bianchi,"37,5"
+Sofia,Conti,"36,9"
+Luca,Ferrara,"37,8"
+Chiara,Galli,"36,5"
+Andrea,Esposito,"37,3"
+Giorgia,Marchesi,"37,1"
+Lorenzo,Barbieri,"36,7"
+Sara,Romano,37
+
+Identificativo,Specializzazione,Numero Letti Disponibili,Numeri Letti Occupati
+RO03,Chirurgia_Generale,10,6
+Nome,Cognome,Temperatura
+Eleonora,Mancini,"36,8"
+Giovanni,Santoro,"37,1"
+Marta,De Luca,"36,5"
+Filippo,Ferrari,"37,4"
+Elisa,Colombo,"36,9"
+Davide,Rizzo,"37,2"

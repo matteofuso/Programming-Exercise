@@ -1,0 +1,33 @@
+02/12/2023 08:54:10 Creazione file di log
+02/12/2023 08:54:10 Tentativo di Visualizza Clinica, non ci sono reparti
+02/12/2023 08:54:14 Importazione clinica
+02/12/2023 08:54:16 Visualizzazione Clinica
+02/12/2023 08:57:03 Importazione clinica
+02/12/2023 08:57:07 Esportazione clinica
+02/12/2023 08:57:11 Visualizzazione Clinica
+02/12/2023 08:57:17 Visualizzazione Clinica
+02/12/2023 08:57:21 Visualizzazione reparto RO01 - Ginecologia (15)
+02/12/2023 08:57:36 Tentativo di aggiornare temperatura paziente, Ea temperatura non xea valida
+02/12/2023 08:58:01 Importazione clinica
+02/12/2023 08:59:41 Aggiornamento temperatura Chiara Marchesi (37 °C) nel reparto RO01 - Ginecologia (15)
+02/12/2023 08:59:45 Visualizzazione Clinica
+02/12/2023 09:00:08 Leggo il log D:\Informatica\4F Matteo Fuso\Classi\Clinica\bin\Debug\data\log\02_12_2023.log
+02/12/2023 09:02:41 Importazione clinica
+02/12/2023 09:02:47 Aggiornamento temperatura Giovanna Bianchi (36,7 °C) a 38°C nel reparto RO00 - Pediatria (20)
+02/12/2023 09:02:50 Leggo il log D:\Informatica\4F Matteo Fuso\Classi\Clinica\bin\Debug\data\log\02_12_2023.log
+02/12/2023 09:07:23 Importazione clinica
+02/12/2023 09:07:41 Aggiornamento temperatura Pietro Arturi (37,5 °C) a 36°C nel reparto RO00 - Pediatria (20)
+02/12/2023 09:07:49 Visualizzazione reparto RO02 - Pronto Soccorso (15)
+02/12/2023 09:08:01 Visualizzazione Clinica
+02/12/2023 09:08:12 Importazione clinica
+02/12/2023 09:08:13 Visualizzazione Clinica
+02/12/2023 09:08:45 Importazione clinica
+02/12/2023 09:08:46 Visualizzazione Clinica
+02/12/2023 09:11:51 Tentativo di aggiornare temperatura paziente, La temperatura non è valida
+02/12/2023 09:12:12 Aggiornamento temperatura Eleonora Mancini (36,8 °C) a 38°C nel reparto RO03 - Chirurgia Generale (10)
+02/12/2023 09:12:24 Visualizzazione Clinica
+02/12/2023 09:18:14 Importazione clinica
+02/12/2023 09:18:15 Visualizzazione Clinica
+02/12/2023 09:18:22 Visualizzazione reparto RO01 - Ginecologia (15)
+02/12/2023 09:42:34 Importazione clinica
+02/12/2023 09:42:38 Visualizzazione Clinica

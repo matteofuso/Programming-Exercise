@@ -1,0 +1,38 @@
+18/01/2024 16:33:29 Avvio Programma
+18/01/2024 16:33:55 Aggiunta auto (0 - BB778WD) Tesla S a Quattro posti
+18/01/2024 16:34:13 Aggiunta auto (1 - EI761YK) Tesla 3 a Quattro posti
+18/01/2024 16:34:22 Aggiunta auto (2 - RZ220AB) Tesla X a Quattro posti
+18/01/2024 16:34:33 Aggiunta auto (3 - NL876XD) Tesla Y a Quattro posti
+18/01/2024 16:34:42 Aggiunta auto (4 - GN663NV) Tesla Cybertruck a Quattro posti
+18/01/2024 16:34:47 Visualizzazione parco macchine
+18/01/2024 16:35:06 Esportazione flotta su file eserno
+18/01/2024 16:35:49 Tentativo di Visualizza Veicolo utilizzando la targa , il veicolo non esiste
+18/01/2024 16:36:35 Avvio Programma
+18/01/2024 16:36:40 Importazione flotta da file eserno
+18/01/2024 16:36:45 Tentativo di Visualizzazione Flotta, la flotta è vuota
+18/01/2024 16:37:07 Avvio Programma
+18/01/2024 16:38:20 Importazione flotta da file eserno
+18/01/2024 16:38:31 Tentativo di Visualizzazione Flotta, la flotta è vuota
+18/01/2024 16:41:23 Avvio Programma
+18/01/2024 16:41:36 Importazione flotta da file eserno
+18/01/2024 16:41:48 Visualizzazione parco macchine
+18/01/2024 16:41:56 Tentativo di Visualizza Veicolo utilizzando la targa , il veicolo non esiste
+18/01/2024 16:41:56 Visualizzazione veicolo con targa 
+18/01/2024 16:42:08 Avvio Programma
+18/01/2024 16:42:09 Importazione flotta da file eserno
+18/01/2024 16:42:50 Avvio Programma
+18/01/2024 16:42:51 Importazione flotta da file eserno
+18/01/2024 16:43:00 Visualizzazione veicolo con codice 2
+18/01/2024 16:47:24 Avvio Programma
+18/01/2024 16:47:27 Impossibile importare la flotta per errore nell'apertura del file
+18/01/2024 16:47:41 Leggo log G:\Il mio Drive\Esercizi\4F\Classi\FlottaAuto\bin\Debug\data\log\18_01_2024.log
+18/01/2024 16:48:35 Avvio Programma
+18/01/2024 16:48:39 Importazione flotta da file eserno
+18/01/2024 16:48:45 Eliminazione veicolo con codice 1
+18/01/2024 16:48:52 Visualizzazione parco macchine
+18/01/2024 16:48:58 Leggo log G:\Il mio Drive\Esercizi\4F\Classi\FlottaAuto\bin\Debug\data\log\18_01_2024.log
+18/01/2024 16:49:52 Avvio Programma
+18/01/2024 16:49:58 Tentativo di Visualizza Veicolo, la flotta è vuota
+18/01/2024 16:50:00 Importazione flotta da file eserno
+18/01/2024 16:50:19 Tentativo di Visualizza Veicolo utilizzando la targa AA000AA, il veicolo non esiste
+18/01/2024 16:50:19 Visualizzazione veicolo con targa AA000AA
