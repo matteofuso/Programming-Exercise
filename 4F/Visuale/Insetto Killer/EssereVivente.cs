@@ -31,5 +31,10 @@ namespace Insetto_Killer
         public EssereVivente(string imgVivo, string imgMorto) : this(null, null, imgVivo, imgMorto) { }
         // Metodi
 
+        // Override
+        public override string ToString()
+        {
+            return Specie;
+        }
     }
 }

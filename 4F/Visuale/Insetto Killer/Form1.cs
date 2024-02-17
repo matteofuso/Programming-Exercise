@@ -15,7 +15,6 @@ namespace Insetto_Killer
     {
         Random _random = new Random();
         Point _point;
-        Insetto _mosca, _ragno, _ape, _farfalla;
         Insetto _current;
         int _miss;
         public InsectKiller()
@@ -23,11 +22,11 @@ namespace Insetto_Killer
         {
             InitializeComponent();
             _point = new Point();
-            _mosca = new Insetto("Tim", "Muscidae", "Mosca", "Vola", "mosca.gif", "moscaX.gif");
-            _ragno = new Insetto("Jonny", "Artropodi", "Ragno", "Cammina", "ragno.gif", "ragnoX.gif");
-            _ape = new Insetto("Eresh", "Apipi", "Ape", "Vola", "ape.gif", "apeX.gif");
-            _farfalla = new Insetto("Sims", "Lepidotteri", "Farfalla", "Vola", "farfalla.gif", "farfallaX.gif");
-            _current = _mosca;
+            Insetti.Items.Add(new Insetto("Tim", "Muscidae", "Mosca", "Vola", "mosca.gif", "moscaX.gif"));
+            Insetti.Items.Add(new Insetto("Jonny", "Artropodi", "Ragno", "Cammina", "ragno.gif", "ragnoX.gif"));
+            Insetti.Items.Add(new Insetto("Eresh", "Apipi", "Ape", "Vola", "ape.gif", "apeX.gif"));
+            Insetti.Items.Add(new Insetto("Sims", "Lepidotteri", "Farfalla", "Vola", "farfalla.gif", "farfallaX.gif"));
+            _current = (Insetto)Insetti.Items[0];
             BugImage.Image = _current.Vivo;
             _miss = 0;
         }
@@ -57,45 +56,34 @@ namespace Insetto_Killer
             {
                 Timer.Enabled = false;
                 BugImage.Image = _current.Morto;
-                if(Facile.Checked)
+                if (Facile.Checked)
                 {
                     Medio.Checked = true;
-                } else if (Medio.Checked)
+                }
+                else if (Medio.Checked)
                 {
                     Difficile.Checked = true;
-                } else
+                }
+                else
                 {
                     Estrema.Checked = true;
                 }
                 MessageBox.Show("Insetto colpito", "Bravo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 BugImage.Image = _current.Vivo;
                 Timer.Enabled = true;
+                Timer_Tick(null, null);
             }
         }
-        private void UpdateBug()
+        private void Toggle_Click(object sender, EventArgs e)
         {
-            if (Timer.Enabled)
+            if (Toggle.Text == "Pausa")
             {
-                BugImage.Image = _current.Vivo;
+                Toggle.Text = "Riprendi";
             }
             else
             {
-                BugImage.Image = _current.Morto;
+                Toggle.Text = "Pausa";
             }
-        }
-        private void SpiderRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            _current = _ragno;
-            UpdateBug();
-        }
-
-        private void InsectGroupBox_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Toggle_Click(object sender, EventArgs e)
-        {
             Timer.Enabled = !Timer.Enabled;
         }
 
@@ -131,26 +119,22 @@ namespace Insetto_Killer
             if (++_miss == 5)
             {
                 MessageBox.Show("Hai sbagliato a cliccare troppe volte", "Game over", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Reset_Click(sender, e);
+                Reset_Click(null, null);
             }
         }
 
-        private void MosquitoRadioBtn_CheckedChanged(object sender, EventArgs e)
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _current = _mosca;
-            UpdateBug();
+            _current = (Insetto)Insetti.Items[Insetti.SelectedIndex];
+            if (Timer.Enabled)
+            {
+                BugImage.Image = _current.Vivo;
+            }
+            else
+            {
+                BugImage.Image = _current.Morto;
+            }
         }
 
-        private void BatterflyRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            _current = _farfalla;
-            UpdateBug();
-        }
-
-        private void BeeRadioBtn_CheckedChanged(object sender, EventArgs e)
-        {
-            _current = _ape;
-            UpdateBug();
-        }
     }
 }
