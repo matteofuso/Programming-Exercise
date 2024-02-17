@@ -1,28 +1,23 @@
 ﻿using System;
-using System.IO;
 
 namespace Insetto_Killer
 {
-    internal class Insetto
+    internal class Insetto : EssereVivente
     {
-        string _directory;
-        string _bugAlive;
-        string _bugDead;
-        public string Alive
+        public string Famiglia { get; set; }
+        public string Nome { get; set; }
+        // Proprietà
+
+        // Costruttori
+        public Insetto(string nome, string famiglia, string specie, string mobilità, string path, string imgVivo, string imgMorto) : base(specie, mobilità, path, imgVivo, imgMorto)
         {
-            get { return Path.Combine(_directory, _bugAlive); }
-            set { _bugAlive = value; }
+            Nome = nome;
+            Famiglia = famiglia;
         }
-        public string Dead
+        public Insetto(string nome, string famiglia, string specie, string mobilità, string imgVivo, string imgMorto) : base(specie, mobilità, imgVivo, imgMorto)
         {
-            get { return Path.Combine(_directory, _bugDead); }
-            set { _bugDead = value; }
-        }
-        public Insetto(string alive, string dead)
-        {
-            _directory = Path.Combine(Environment.CurrentDirectory, "mosca_immagini");
-            _bugAlive = alive;
-            _bugDead = dead;
+            Nome = nome;
+            Famiglia = famiglia;
         }
     }
 }
