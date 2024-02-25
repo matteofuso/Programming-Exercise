@@ -9,7 +9,7 @@ namespace Geometria
 {
     internal class Rettangolo
     {
-        Punto _puntoBase;
+        protected Punto _puntoBase;
         double _width;
         double _height;
 
@@ -37,7 +37,7 @@ namespace Geometria
         public Rettangolo(double height, double width) : this(new Punto(0, 0), height, width) { }
         public double CalcolaPerimetro()
         {
-            return (Width * Height) * 2;
+            return (Width + Height) * 2;
         }
         public double CalcoloArea()
         {
@@ -45,7 +45,7 @@ namespace Geometria
         }
         public override string ToString()
         {
-            return string.Format("Posizione: ({0};{1}), Larghezza: {2}, Altezza: {3}", _puntoBase.X, _puntoBase.Y, Width, Height);
+            return string.Format("Rettangolo - Posizione: ({0};{1}), Larghezza: {2}, Altezza: {3}, Area: {4}, Perimetro: {5}", _puntoBase.X, _puntoBase.Y, Width, Height, CalcoloArea(), CalcolaPerimetro());
         }
     }
 }
